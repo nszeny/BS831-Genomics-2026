@@ -1,0 +1,59 @@
+---
+title: "BS831_HW01.Rmd"
+output: pdf_document
+date: "2026-03-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Biobase)
+library(SummarizedExperiment)
+library(tidyverse)
+```
+
+# Question 1
+
+## Create an ExpressionSet object
+```{r}
+set.seed(123)
+
+expr_matrix <- matrix(
+  sample(1:100, 20),
+  nrow = 5,
+  ncol = 4,
+  dimnames = list(
+    paste0("Gene", 1:5),
+    paste0("Sample", 1:4)
+  )
+)
+
+pheno_data <- data.frame(
+  condition = c("Healthy", "Healthy", "Diseased", "Diseased"),
+  batch = c(1,1,2,2)
+)
+rownames(pheno_data) <- colnames(expr_matrix)
+
+feature_data <- data.frame(
+  gene_symbol = paste0("G", 1:5),
+  chromosome = c("chr1","chr2","chr3","chr1","chrX")
+)
+rownames(feature_data) <- rownames(expr_matrix)
+
+eset <- ExpressionSet(
+  assayData = expr_matrix,
+  phenoData = AnnotatedDataFrame(pheno_data),
+  featureData = AnnotatedDataFrame(feature_data)
+)
+
+dim(eset)
+```
+
+## Snapshot
+
+```{r}
+exprs(eset)
+pData(eset)
+fData(eset)
+```
+
+## Interpretation
